@@ -1,0 +1,20 @@
+.logo-box{
+    background-color: #455a64;
+    color: #fff;
+}
+
+.icon{
+    color: #fff;
+}
+
+.app-logo{
+    font-weight: 100;
+    margin-left: 10px;
+    margin-top: 10px;
+    font: 300 20px/32px Roboto, "Helvetica Neue", sans-serif;
+}
+
+.app-logo sub{
+    font-size: 10px;
+}
+

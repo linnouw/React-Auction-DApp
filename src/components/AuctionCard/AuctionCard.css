@@ -1,0 +1,50 @@
+.auction-description{
+    opacity: 0.7;
+}
+
+.auction-card{
+    margin: 10px;
+}
+
+.status-dot-STARTED{
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    background-color: green;
+}
+
+.status-dot-OVER{
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    background-color: red;
+}
+
+.status-dot-CANCELLED{
+    border-radius: 50%;
+    height: 10px;
+    width: 10px;
+    background-color: black;
+}
+
+.auction-timer{
+    opacity: 0.7;
+}
+
+.auction-status-STARTED{
+    color: green;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.auction-status-OVER{
+    color: red;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.auction-status-CANCELLED{
+    color: black;
+    font-weight: bold;
+    text-transform: uppercase;
+}

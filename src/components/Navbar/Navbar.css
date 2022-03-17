@@ -1,0 +1,43 @@
+.navbar-box{
+    background-color: #fff;
+    box-shadow: 0 3px 6px rgb(0 0 0 / 16%), 0 3px 6px rgb(0 0 0 / 23%);
+    padding: 1px;
+    padding-left: 20px;
+}
+
+.navbar-button{
+    padding: 8px 12px;
+    background-color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: "Helvetica Neue", sans-serif;
+    color:rgba(0,0,0,.87);
+    border: none;
+    border-radius: 10%;
+}
+
+.navbar-button:hover{
+    background-color: rgb(236, 236, 236);
+}
+
+
+.navbar-button:active{
+    padding: 8px 12px;
+    background-color: #fff;
+    font-weight: 500;
+    font-size: 14px;
+    font-family: "Helvetica Neue", sans-serif;
+    color: #ff4081;
+    border-color: rgba(0,0,0,.12);
+    border-radius: 10%;
+}
+
+.tabs{
+    background-color: antiquewhite;
+}
+
+.container{
+        min-width: 100%;
+        min-height: 100%;
+        background-color: #f2f2f2;
+}
