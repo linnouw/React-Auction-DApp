@@ -6,8 +6,23 @@ import { Typography, Grid, Modal, Box, Stack } from "@mui/material";
 //@Icons
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import CheckIcon from "@mui/icons-material/Check";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+//web3
+import Web3 from "web3";
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "../../wallet/Connect";
 
 function Confirmation(props) {
+  const { active, account, library, activate, deactivate } = useWeb3React();
+
+  async function connect() {
+    try {
+      await activate(injected);
+    } catch (ex) {
+      console.log(ex);
+    }
+  }
+
   return (
     <Modal open={props.open} onClose={props.closeModal}>
       <Box className="modal-box" p={3}>
@@ -29,13 +44,12 @@ function Confirmation(props) {
           alignItems="center"
           p={2}
         >
-          <Typography>Connect to your cryptowallet</Typography>
-          <Grid
-            container
-            direction="row"
-            justifyContent={{ md: "flex-start", xs: "center" }}
-            p={2}
-          >
+          {active ? (
+            <Typography>Connected wallet: {account}</Typography>
+          ) : (
+            <Typography>Connect to your cryptowallet</Typography>
+          )}
+          <Grid container direction="row" justifyContent="center" p={2}>
             <Grid item p={1}>
               <button className="modal-button" onClick={props.closeModal}>
                 <Stack direction="row">
@@ -44,15 +58,27 @@ function Confirmation(props) {
                 </Stack>
               </button>
             </Grid>
-            <Grid item p={1}>
-              <button className="modal-button">
-                <Stack direction="row">
-                  <CheckIcon />
-                  <Typography>Confirm</Typography>
-                </Stack>
-              </button>
-            </Grid>
+            {active ? (
+              <Grid item p={1}>
+                <button className="modal-button">
+                  <Stack direction="row">
+                    <AttachMoneyIcon />
+                    <Typography>Pay</Typography>
+                  </Stack>
+                </button>
+              </Grid>
+            ) : (
+              <Grid item p={1}>
+                <button className="modal-button" onClick={connect}>
+                  <Stack direction="row">
+                    <CheckIcon />
+                    <Typography>Connect</Typography>
+                  </Stack>
+                </button>
+              </Grid>
+            )}
           </Grid>
+          <Grid></Grid>
         </Grid>
       </Box>
     </Modal>
