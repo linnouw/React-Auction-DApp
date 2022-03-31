@@ -1,10 +1,10 @@
 //styles
 import "./Dashboard.css";
 //@MUI
-import { Box } from "@mui/material";
+import { Grid } from "@mui/material";
 
 function Dashboard() {
-  return <Box>Dashboard</Box>;
+  return <Grid>Dashboard</Grid>;
 }
 
 export default Dashboard;

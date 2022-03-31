@@ -1,10 +1,10 @@
 //styles
 import "./Offers.css";
 //@MUI
-import { Box } from "@mui/material";
+import { Grid } from "@mui/material";
 
 function Offers() {
-  return <Box>Offers</Box>;
+  return <Grid>Offers</Grid>;
 }
 
 export default Offers;

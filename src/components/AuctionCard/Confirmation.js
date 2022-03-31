@@ -1,8 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 //styles
 import "./AuctionCard.css";
 //@MUI
-import { Typography, Grid, Modal, Box, Stack } from "@mui/material";
+import { Typography, Grid, Modal, Box, Stack, TextField } from "@mui/material";
 //@Icons
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import CheckIcon from "@mui/icons-material/Check";
@@ -11,9 +11,11 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../wallet/Connect";
+import my_auction_contract from "../../abi/MyAuction.json";
 
 function Confirmation(props) {
   const { active, account, library, activate, deactivate } = useWeb3React();
+  const [amountValue, setAmountValue] = useState(null);
 
   async function connect() {
     try {
@@ -22,6 +24,32 @@ function Confirmation(props) {
       console.log(ex);
     }
   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (props.owner !== account) {
+      if (amountValue !== null) {
+        const web3 = new Web3(
+          new Web3.providers.HttpProvider("http://localhost:7545")
+        );
+        const networkId = await web3.eth.net.getId();
+        const Auction = new web3.eth.Contract(
+          my_auction_contract.abi,
+          props.address
+        );
+        await Auction.methods
+          .bid()
+          .send({
+            from: account,
+            to: props.address,
+            value: web3.utils.toWei(amountValue, "ether"),
+            gas: "2233593",
+          })
+          .then(() => alert("Submitted"))
+          .catch((error) => alert(error));
+      }
+    }
+  };
 
   return (
     <Modal open={props.open} onClose={props.closeModal}>
@@ -45,7 +73,16 @@ function Confirmation(props) {
           p={2}
         >
           {active ? (
-            <Typography>Connected wallet: {account}</Typography>
+            <>
+              <Typography className="auction-owner">
+                Connected wallet: {account}
+              </Typography>
+              <TextField
+                label="Insert amount to bid"
+                variant="standard"
+                onChange={(e) => setAmountValue(e.target.value)}
+              />
+            </>
           ) : (
             <Typography>Connect to your cryptowallet</Typography>
           )}
@@ -60,10 +97,10 @@ function Confirmation(props) {
             </Grid>
             {active ? (
               <Grid item p={1}>
-                <button className="modal-button">
+                <button className="modal-button" onClick={handleSubmit}>
                   <Stack direction="row">
                     <AttachMoneyIcon />
-                    <Typography>Pay</Typography>
+                    <Typography>Bid</Typography>
                   </Stack>
                 </button>
               </Grid>

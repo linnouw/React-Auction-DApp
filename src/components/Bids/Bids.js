@@ -1,11 +1,15 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 //styles
 import "./Bids.css";
 //@MUI
 import { Grid, Box, Typography, Stack, TextField, Button } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
+//web3
+import Web3 from "web3";
+import auction_list_contract from "../../abi/AuctionList.json";
+import { useWeb3React } from "@web3-react/core";
+import my_auction_contract from "../../abi/MyAuction.json";
 
-//dummy datas for now
 const dummyRows = [
   {
     id: 1,
@@ -46,7 +50,7 @@ const columns = [
         >
           {params.value !== 0 ? (
             <>
-              <Typography>{params.value}$</Typography>
+              <Typography>{params.value} ETH</Typography>
               <Button
                 variant="contained"
                 size="small"
@@ -89,7 +93,7 @@ const columns = [
     field: "highestBid",
     headerName: "Highest bid",
     flex: 1,
-    renderCell: (params) => <Typography>{params.value}$</Typography>,
+    renderCell: (params) => <Typography>{params.value} ETH</Typography>,
   },
   {
     field: "highestBidder",
@@ -109,30 +113,34 @@ const columns = [
         alignItems="center"
         spacing={1}
       >
-        {params.value === "Started" ? (
+        {params.value === 0 ? (
           <>
-            <Typography className="auction-status-STARTED">
-              {params.value}
-            </Typography>
+            <Typography className="auction-status-STARTED">STARTED</Typography>
             <Box className="status-dot-STARTED" />
           </>
         ) : (
           <></>
         )}
-        {params.value === "Over" ? (
+        {params.value === 1 ? (
           <>
-            <Typography className="auction-status-OVER">
-              {params.value}
-            </Typography>
+            <Typography className="auction-status-OVER">OVER</Typography>
             <Box className="status-dot-OVER" />
           </>
         ) : (
           <></>
         )}
-        {params.value === "Cancelled" ? (
+        {params.value === 2 ? (
+          <>
+            <Typography className="auction-status-OVER">FINALISED</Typography>
+            <Box className="status-dot-OVER" />
+          </>
+        ) : (
+          <></>
+        )}
+        {params.value === 3 ? (
           <>
             <Typography className="auction-status-CANCELLED">
-              {params.value}
+              CANCELLED
             </Typography>
             <Box className="status-dot-CANCELLED" />
           </>
@@ -144,12 +152,58 @@ const columns = [
   },
 ];
 
+const getAuctionParameters = async (address) => {
+  const web3 = new Web3(
+    new Web3.providers.HttpProvider("http://localhost:7545")
+  );
+  const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
+  const event = await Auction.methods.returnContents().call();
+  const eventHighestBidder = await Auction.methods.getHighestBidder().call();
+  return {
+    id: address,
+    name: event[1],
+    bid: 22,
+    highestBid: 22,
+    highestBidder: eventHighestBidder,
+    status: event[7],
+  };
+};
+
 function Bids() {
   const [searchTerm, setSearchTerm] = React.useState("");
+  const { active, account, library, activate, deactivate } = useWeb3React();
+  const [auctionAddress, setAuctionAddress] = useState([]);
+
+  useEffect(() => {
+    async function load() {
+      const web3 = new Web3(
+        new Web3.providers.HttpProvider("http://localhost:7545")
+      );
+      const networkId = await web3.eth.net.getId();
+      const AuctionListContract = new web3.eth.Contract(
+        auction_list_contract.abi,
+        auction_list_contract.networks[networkId].address
+      );
+      const auctions = await AuctionListContract.methods
+        .getAllAuctions()
+        .call();
+      setAuctionAddress(auctions);
+    }
+
+    load();
+  });
+
+  const bidRows = auctionAddress.map((address) => {
+    getAuctionParameters(address).then((result) => {
+      console.log(result);
+      return result;
+    });
+  });
+
   const filteredRows = dummyRows.filter((row) => row.name.includes(searchTerm));
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="row">
       <Grid
         item
         p={2}
@@ -163,12 +217,13 @@ function Bids() {
           label="Enter name of a product"
           variant="outlined"
           className="bids-textfield"
-          onChange={(event) => {
-            setSearchTerm(event.target.value);
-          }}
+          // onChange={(event) => {
+          //   setSearchTerm(event.target.value);
+          // }}
+          onChange={() => console.log(bidRows)}
         />
       </Grid>
-      <Grid item p={2}>
+      <Grid item p={2} xs={12}>
         <div style={{ height: 400, width: "100%" }}>
           <DataGrid
             rows={filteredRows}
