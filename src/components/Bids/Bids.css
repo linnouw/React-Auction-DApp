@@ -1,3 +1,25 @@
 .bids-textfield{
     width: 50vh;
 }
+
+.auction-status-STARTED{
+    color: green;
+}
+
+.status-dot-STARTED{
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: green;
+}
+
+.auction-status-OVER{
+    color: black;
+}
+
+.status-dot-OVER{
+    border-radius: 50%;
+    width: 10px;
+    height: 10px;
+    background-color: black;
+}

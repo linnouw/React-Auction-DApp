@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 //components
-import AuctionCard from "../AuctionCard/AuctionCard";
+import AuctionList from "./AuctionList";
 import AddAuction from "./AddAuction";
 //styles
 import "./Auctions.css";
@@ -15,6 +15,7 @@ import auction_list_contract from "../../abi/AuctionList.json";
 function Auctions() {
   const [open, setOpen] = React.useState(false);
   const [auctionAddressList, setAuctionAddressList] = useState(); //store auction list
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -59,9 +60,7 @@ function Auctions() {
           <></>
         ) : (
           auctionAddressList.map((address, index) => (
-            <Grid item xs={3}>
-              <AuctionCard key={index} address={address} />
-            </Grid>
+            <AuctionList address={address} key={index} />
           ))
         )}
       </Grid>

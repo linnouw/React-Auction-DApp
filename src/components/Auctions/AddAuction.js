@@ -9,7 +9,7 @@ import {
   Box,
   TextField,
   InputAdornment,
-  Button,
+  Grid,
 } from "@mui/material";
 //@Icons
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -56,7 +56,7 @@ function AddAuction(props) {
           parseInt(auctionDuration),
           parseInt(minIncrement)
         )
-        .send({ from: account, value: "100000", gas: "2233593" })
+        .send({ from: account, value: "0", gas: "3000000" })
         .then(() => alert("successfully added"))
         .catch((err) => alert(err));
     } else alert("Error ! all the fields are required to add an auction.");
@@ -70,18 +70,36 @@ function AddAuction(props) {
     }
   }
 
+  const decreaseDuration = () => {
+    if (auctionDuration <= 0) {
+      setAuctionDuration(0);
+    } else {
+      setAuctionDuration(auctionDuration - 1);
+    }
+  };
+
+  const increaseDuration = () => {
+    setAuctionDuration(auctionDuration + 1);
+  };
+
+  const onChange = (e) => {
+    const value = parseInt(e.target.value);
+    if (value >= 0) {
+      setAuctionDuration(value);
+    }
+  };
+
   return (
     <Modal open={props.open} onClose={props.closeModal}>
       <Box className="modal-box" p={3}>
-        <Typography variant="h6">
-          To add a new auction, you have to be connected to your wallet
-        </Typography>
         {active ? (
           <Typography className="auction-owner">
             Connected wallet: {account}
           </Typography>
         ) : (
-          <></>
+          <Typography variant="h6">
+            To add a new auction, you have to be connected to your wallet
+          </Typography>
         )}
         {active ? (
           <>
@@ -119,7 +137,7 @@ function AddAuction(props) {
                 variant="outlined"
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">$</InputAdornment>
+                    <InputAdornment position="end">ETH</InputAdornment>
                   ),
                 }}
                 onChange={(e) => setStartingPrice(e.target.value)}
@@ -127,14 +145,33 @@ function AddAuction(props) {
 
               <TextField
                 id="outlined-basic"
-                label="Auction duration"
+                value={auctionDuration}
                 variant="outlined"
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">H</InputAdornment>
+                    <>
+                      <InputAdornment position="end">H</InputAdornment>
+                      <Grid direction="column" pl={1}>
+                        <button
+                          style={{
+                            width: "20px",
+                            height: "20px",
+                          }}
+                          onClick={increaseDuration}
+                        >
+                          +
+                        </button>
+                        <button
+                          style={{ width: "20px", height: "20px" }}
+                          onClick={decreaseDuration}
+                        >
+                          -
+                        </button>
+                      </Grid>
+                    </>
                   ),
                 }}
-                onChange={(e) => setAuctionDuration(e.target.value)}
+                onChange={onChange}
               />
 
               <TextField
@@ -143,7 +180,7 @@ function AddAuction(props) {
                 variant="outlined"
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">$</InputAdornment>
+                    <InputAdornment position="end">ETH</InputAdornment>
                   ),
                 }}
                 onChange={(e) => setMinIncrement(e.target.value)}
