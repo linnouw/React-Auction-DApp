@@ -22,9 +22,9 @@ function AuctionCard(props) {
   const [open, setOpen] = React.useState(false);
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [auctionEvent, setAuctionEvent] = useState([]);
-  const [highestBid, setHighestBid] = useState();
-  const [timestamp, setTimestamp] = useState();
-  const [auctionStart, setAuctionStart] = useState();
+  const [highestBid, setHighestBid] = useState(null);
+  const [auctionStart, setAuctionStart] = useState(null);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -41,15 +41,9 @@ function AuctionCard(props) {
       //get auction content
       const event = await Auction.methods.returnContents().call();
       setAuctionEvent(event);
-
-      //get highest bid value
+      //get highest bid
       const highest_bid = await Auction.methods.highestBid.call().call();
-      //const highest_bidder = await Auction.methods.getHighestBidder().call();
-      setHighestBid(highest_bid * Math.pow(10, -18));
-
-      //get auction start
-      const auction_start = await Auction.methods.auctionStart.call().call();
-      setAuctionStart(auction_start);
+      setHighestBid(highest_bid);
     }
 
     load();
@@ -73,9 +67,9 @@ function AuctionCard(props) {
             {auctionEvent[2]}
           </Typography>
           <Typography>Starting price: {auctionEvent[3]} ETH</Typography>
-          {highestBid !== 0 ? (
-            <Typography style={{ color: "red" }}>
-              Current highest bid : {highestBid} ETH
+          {highestBid * Math.pow(10, -18) !== 0 ? (
+            <Typography className="blink">
+              Current highest bid : {highestBid * Math.pow(10, -18)} ETH
             </Typography>
           ) : (
             <></>

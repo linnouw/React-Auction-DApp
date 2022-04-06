@@ -5,7 +5,7 @@ import "./Logo.css";
 import { Box, IconButton, Grid, Tooltip, Menu, MenuItem } from "@mui/material";
 //@Icons
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
-import FeedbackIcon from "@mui/icons-material/Feedback";
+import NotificationsIcon from "@mui/icons-material/Notifications";
 
 function Logo() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -31,9 +31,9 @@ function Logo() {
           </span>
         </Grid>
         <Grid item>
-          <Tooltip title="Create a feedback">
+          <Tooltip title="Notifications">
             <IconButton>
-              <FeedbackIcon className="icon" />
+              <NotificationsIcon className="icon" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Manage my profile">
