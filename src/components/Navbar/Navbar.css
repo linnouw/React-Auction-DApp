@@ -42,3 +42,13 @@
         min-height: 100%;
         background-color: #f2f2f2;
 }
+
+.link-button{
+    text-decoration: none;
+    color: black;
+}
+
+.link-button:focus :hover :visited :link :active {
+    text-decoration: none;
+    color: black;
+}

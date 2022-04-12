@@ -24,6 +24,7 @@ function AuctionCard(props) {
   const [auctionEvent, setAuctionEvent] = useState([]);
   const [highestBid, setHighestBid] = useState(null);
   const [auctionStart, setAuctionStart] = useState(null);
+  const [highestBidder, setHighestBidder] = useState();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -44,6 +45,9 @@ function AuctionCard(props) {
       //get highest bid
       const highest_bid = await Auction.methods.highestBid.call().call();
       setHighestBid(highest_bid);
+      //get highest bidder which is auction winner
+      const highest_bidder = await Auction.methods.getHighestBidder().call();
+      setHighestBidder(highest_bidder);
     }
 
     load();
@@ -67,29 +71,49 @@ function AuctionCard(props) {
             {auctionEvent[2]}
           </Typography>
           <Typography>Starting price: {auctionEvent[3]} ETH</Typography>
-          {highestBid * Math.pow(10, -18) !== 0 ? (
-            <Typography className="blink">
-              Current highest bid : {highestBid * Math.pow(10, -18)} ETH
-            </Typography>
-          ) : (
-            <></>
-          )}
           <Typography>Min increment: {auctionEvent[5]} ETH</Typography>
-          <Typography>Auction duration: {auctionEvent[4]}H</Typography>
+          <Typography>Auction duration: {auctionEvent[4]}MIN</Typography>
           <Typography className="auction-owner">
             Owner: {auctionEvent[0]}
           </Typography>
         </CardContent>
         <CardActions>
           <Grid container direction="row">
-            {account === auctionEvent[0] ? (
-              <Button disabled variant="text">
-                Bid on
-              </Button>
+            {props.auctionFinished ? (
+              <>
+                {highestBidder !==
+                "0x0000000000000000000000000000000000000000" ? (
+                  <>
+                    <Typography className="auction-winner-title">
+                      Winner of the auction
+                    </Typography>
+                    <Typography className="auction-winner">
+                      {highestBidder}
+                    </Typography>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </>
             ) : (
-              <Button variant="text" onClick={handleOpen}>
-                Bid on
-              </Button>
+              <>
+                {highestBid * Math.pow(10, -18) !== 0 ? (
+                  <Typography className="blink">
+                    Current highest bid : {highestBid * Math.pow(10, -18)} ETH
+                  </Typography>
+                ) : (
+                  <></>
+                )}
+                {account === auctionEvent[0] ? (
+                  <Button disabled variant="text">
+                    Bid on
+                  </Button>
+                ) : (
+                  <Button variant="text" onClick={handleOpen}>
+                    Bid on
+                  </Button>
+                )}
+              </>
             )}
           </Grid>
         </CardActions>

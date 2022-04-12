@@ -150,7 +150,7 @@ function AddAuction(props) {
                 InputProps={{
                   endAdornment: (
                     <>
-                      <InputAdornment position="end">H</InputAdornment>
+                      <InputAdornment position="end">MIN</InputAdornment>
                       <Grid direction="column" pl={1}>
                         <button
                           style={{

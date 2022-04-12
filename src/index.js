@@ -5,6 +5,7 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./polyfill";
 import { Web3ReactProvider } from "@web3-react/core";
+import { BrowserRouter } from "react-router-dom";
 import Web3 from "web3";
 
 function getLibrary(provider) {
@@ -13,9 +14,11 @@ function getLibrary(provider) {
 
 ReactDOM.render(
   <React.StrictMode>
-    <Web3ReactProvider getLibrary={getLibrary}>
-      <App />
-    </Web3ReactProvider>
+    <BrowserRouter>
+      <Web3ReactProvider getLibrary={getLibrary}>
+        <App />
+      </Web3ReactProvider>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById("root")
 );

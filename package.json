@@ -17,8 +17,12 @@
     "os": "^0.1.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-notifications": "^1.7.3",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.0",
+    "react-sweetalert2": "^0.5.2",
     "stream": "^0.0.2",
+    "sweetalert2-react-content": "^4.2.0",
     "walletconnect": "^1.7.5",
     "web-vitals": "^2.1.4",
     "web3": "^1.7.1"

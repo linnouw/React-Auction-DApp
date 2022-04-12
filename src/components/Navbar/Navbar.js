@@ -8,18 +8,52 @@ import Offers from "../Offers/Offers";
 import "./Navbar.css";
 //@MUI
 import { Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 //@Icons
 
 function Navbar() {
-  const [value, setValue] = React.useState(0);
+  // const [value, setValue] = React.useState(0);
 
-  const handleChange = (newValue) => {
-    setValue(newValue);
+  // const handleChange = (newValue) => {
+  //   setValue(newValue);
+  // };
+  let navigate = useNavigate();
+  const routeChange = (path) => {
+    navigate(path);
   };
 
   return (
     <div>
-      <Box className="navbar-box">
+      <div>
+        <Box className="navbar-box">
+          <button
+            className="navbar-button"
+            onClick={() => {
+              routeChange("/");
+            }}
+          >
+            Dashboard
+          </button>
+          <button
+            className="navbar-button"
+            onClick={() => {
+              routeChange("/auctions");
+            }}
+          >
+            Auctions
+          </button>
+          <button
+            className="navbar-button"
+            onClick={() => {
+              routeChange("/bids");
+            }}
+          >
+            Bids
+          </button>
+        </Box>
+      </div>
+
+      {/* <Box className="navbar-box">
         <button className="navbar-button" onClick={() => handleChange(0)}>
           Dashboard
         </button>
@@ -43,7 +77,7 @@ function Navbar() {
         {value === 1 ? <Auctions /> : <></>}
         {value === 2 ? <Bids /> : <></>}
         {value === 3 ? <Offers /> : <></>}
-      </Box>
+      </Box> */}
     </div>
   );
 }
