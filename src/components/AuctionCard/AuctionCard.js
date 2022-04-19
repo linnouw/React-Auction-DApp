@@ -18,7 +18,13 @@ import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import my_auction_contract from "../../abi/MyAuction.json";
 
-function AuctionCard(props) {
+/**
+ * Contains information (name, description, duration, min increment and starting price) of a started auction.
+ * Contains bid on button and a timer.
+ * @param {string} address - address of a specific auction
+ * @param {boolean} auctionFinished - returns true if auction is finished, else false
+ */
+function AuctionCard({ address, auctionFinished }) {
   const [open, setOpen] = React.useState(false);
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [auctionEvent, setAuctionEvent] = useState([]);
@@ -35,10 +41,7 @@ function AuctionCard(props) {
         new Web3.providers.HttpProvider("http://localhost:7545")
       );
       //interact with specific contract
-      const Auction = new web3.eth.Contract(
-        my_auction_contract.abi,
-        props.address
-      );
+      const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
       //get auction content
       const event = await Auction.methods.returnContents().call();
       setAuctionEvent(event);
@@ -78,8 +81,8 @@ function AuctionCard(props) {
           </Typography>
         </CardContent>
         <CardActions>
-          <Grid container direction="row">
-            {props.auctionFinished ? (
+          <Grid container direction="column">
+            {auctionFinished ? (
               <>
                 {highestBidder !==
                 "0x0000000000000000000000000000000000000000" ? (
@@ -92,7 +95,11 @@ function AuctionCard(props) {
                     </Typography>
                   </>
                 ) : (
-                  <></>
+                  <>
+                    <Typography className="no-bidders-title">
+                      No Bidders
+                    </Typography>
+                  </>
                 )}
               </>
             ) : (
@@ -121,7 +128,7 @@ function AuctionCard(props) {
 
       <Confirmation
         owner={auctionEvent[0]}
-        address={props.address}
+        address={address}
         open={open}
         closeModal={handleClose}
       />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 //components
 import AuctionList from "./AuctionList";
 import AddAuction from "./AddAuction";
@@ -8,37 +8,16 @@ import "./Auctions.css";
 import { Grid, Typography, Stack } from "@mui/material";
 //@Icons
 import AddIcon from "@mui/icons-material/Add";
-//web3
-import Web3 from "web3";
-import auction_list_contract from "../../abi/AuctionList.json";
 
-function Auctions() {
+/**
+ * contains two components : add list button & started auction cards
+ * @param {string[]} auctionAddressList - existing auction addresses list
+ */
+function Auctions({ auctionAddressList }) {
   const [open, setOpen] = React.useState(false);
-  const [auctionAddressList, setAuctionAddressList] = useState(); //store auction list
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
-  //get auctions from AuctionList smart contract
-  useEffect(() => {
-    async function load() {
-      const web3 = new Web3(
-        new Web3.providers.HttpProvider("http://localhost:7545")
-      );
-      const networkId = await web3.eth.net.getId();
-      const AuctionListContract = new web3.eth.Contract(
-        auction_list_contract.abi,
-        auction_list_contract.networks[networkId].address
-      );
-
-      const auctions = await AuctionListContract.methods
-        .getAllAuctions()
-        .call();
-      setAuctionAddressList(auctions);
-    }
-
-    load();
-  });
 
   return (
     <Grid container className="auctions-box">

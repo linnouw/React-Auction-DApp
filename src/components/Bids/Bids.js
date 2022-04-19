@@ -6,11 +6,8 @@ import { Grid, Box, Typography, Stack, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 //web3
 import Web3 from "web3";
-import auction_list_contract from "../../abi/AuctionList.json";
 import { useWeb3React } from "@web3-react/core";
-import { injected } from "../../wallet/Connect";
 import my_auction_contract from "../../abi/MyAuction.json";
-import { connected } from "process";
 
 const columns = [
   { field: "id", headerName: "ID", flex: 1 },
@@ -113,7 +110,12 @@ const columns = [
   },
 ];
 
-function Bids() {
+/**
+ *
+ * @param {string[]} auctionAddressList - existing auctions addresses fetched with web3 from Ethereum network
+ * @returns
+ */
+function Bids({ auctionAddressList }) {
   const [searchTerm, setSearchTerm] = React.useState("");
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [rows, setRows] = useState([]);
@@ -142,30 +144,10 @@ function Bids() {
     };
   };
 
-  async function connect() {
-    try {
-      await activate(injected);
-    } catch (ex) {
-      console.log(ex);
-    }
-  }
-
   useEffect(() => {
     async function load() {
-      const web3 = new Web3(
-        new Web3.providers.HttpProvider("http://localhost:7545")
-      );
-      const networkId = await web3.eth.net.getId();
-      const AuctionListContract = new web3.eth.Contract(
-        auction_list_contract.abi,
-        auction_list_contract.networks[networkId].address
-      );
-      const auctions = await AuctionListContract.methods
-        .getAllAuctions()
-        .call();
-
       const bidRows = await Promise.all(
-        auctions.map(async (address) => {
+        auctionAddressList.map(async (address) => {
           return await getAuctionParameters(address);
         })
       );

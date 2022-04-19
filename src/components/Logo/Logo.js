@@ -1,20 +1,52 @@
 //styles
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Logo.css";
+//components
+import Notifications from "./Notifications";
 //@MUI
-import { Box, IconButton, Grid, Tooltip, Menu, MenuItem } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  Grid,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Badge,
+  Popover,
+  Typography,
+} from "@mui/material";
 //@Icons
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 
-function Logo() {
+/**
+ * Contains logo and notification, profile icon buttons
+ * @param {string[]} auctionAddressList - list of existing auction addresses fetched from blockchain network
+ */
+function Logo({ auctionAddressList }) {
+  //menu bar for profile
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
+  };
+
+  //notification popover
+  const [anchorElNotification, setAnchorElNotification] = React.useState(null);
+  const openNotification = Boolean(anchorElNotification);
+  const idNotification = openNotification ? "simple-popover" : undefined;
+
+  const handleClickNotification = (event) => {
+    setAnchorElNotification(event.currentTarget);
+  };
+
+  const handleCloseNotification = () => {
+    setAnchorElNotification(null);
   };
 
   return (
@@ -31,11 +63,11 @@ function Logo() {
           </span>
         </Grid>
         <Grid item>
-          <Tooltip title="Notifications">
-            <IconButton>
+          <IconButton onClick={handleClickNotification}>
+            <Badge color="error" variant="dot">
               <NotificationsIcon className="icon" />
-            </IconButton>
-          </Tooltip>
+            </Badge>
+          </IconButton>
           <Tooltip title="Manage my profile">
             <IconButton
               id="basic-button"
@@ -59,6 +91,17 @@ function Logo() {
         >
           <MenuItem onClick={handleClose}>My profile</MenuItem>
         </Menu>
+        <Notifications
+          auctionAddressList={auctionAddressList}
+          id={idNotification}
+          open={openNotification}
+          anchorEl={anchorElNotification}
+          onClose={handleCloseNotification}
+          anchorOrigin={{
+            vertical: "bottom",
+            horizontal: "left",
+          }}
+        />
       </Grid>
     </Box>
   );

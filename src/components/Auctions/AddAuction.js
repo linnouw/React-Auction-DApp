@@ -21,7 +21,13 @@ import auction_list_contract from "../../abi/AuctionList.json";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../wallet/Connect";
 
-function AddAuction(props) {
+/**
+ * Modal contains form to create an auction.
+ * @param {boolean} open - state of the modal: closed or open
+ * @param {function} closeModal - open setter
+ * @returns
+ */
+function AddAuction({ open, closeModal }) {
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [startingPrice, setStartingPrice] = useState(null);
@@ -90,7 +96,7 @@ function AddAuction(props) {
   };
 
   return (
-    <Modal open={props.open} onClose={props.closeModal}>
+    <Modal open={open} onClose={closeModal}>
       <Box className="modal-box" p={3}>
         {active ? (
           <Typography className="auction-owner">
@@ -197,7 +203,7 @@ function AddAuction(props) {
           spacing={2}
           p={2}
         >
-          <button className="modal-button" onClick={props.closeModal}>
+          <button className="modal-button" onClick={closeModal}>
             <Stack direction="row">
               <KeyboardBackspaceIcon />
               <Typography>Cancel</Typography>

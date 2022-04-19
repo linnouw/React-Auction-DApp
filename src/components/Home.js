@@ -4,10 +4,14 @@ import Navbar from "./Navbar/Navbar";
 //styles
 import "./Home.css";
 
-function Home() {
+/**
+ * Fixed component contains logo and navbar
+ * @param {address[]} auctionAddressList-list of existing auction addresses fetched from blockchain network
+ */
+function Home({ auctionAddressList }) {
   return (
     <div>
-      <Logo />
+      <Logo auctionAddressList={auctionAddressList} />
       <Navbar />
     </div>
   );

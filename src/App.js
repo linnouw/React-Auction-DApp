@@ -7,15 +7,47 @@ import Auctions from "./components/Auctions/Auctions";
 import Bids from "./components/Bids/Bids";
 //styles
 import "./App.css";
+//web3
+import Web3 from "web3";
+import auction_list_contract from "./abi/AuctionList.json";
 
 function App() {
+  //store auction list
+  const [auctionAddressList, setAuctionAddressList] = useState();
+
+  //fetch auction addresses list with web2
+  async function load() {
+    const web3 = new Web3(
+      new Web3.providers.HttpProvider("http://localhost:7545")
+    );
+    const networkId = await web3.eth.net.getId();
+    const AuctionListContract = new web3.eth.Contract(
+      auction_list_contract.abi,
+      auction_list_contract.networks[networkId].address
+    );
+
+    const auctions = await AuctionListContract.methods.getAllAuctions().call();
+
+    setAuctionAddressList(auctions);
+  }
+
+  useEffect(() => {
+    load();
+  });
+
   return (
     <div>
-      <Home />
+      <Home auctionAddressList={auctionAddressList} />
       <Routes>
         <Route path="/" element={<Dashboard />} />
-        <Route path="/auctions" element={<Auctions />} />
-        <Route path="/bids" element={<Bids />} />
+        <Route
+          path="/auctions"
+          element={<Auctions auctionAddressList={auctionAddressList} />}
+        />
+        <Route
+          path="/bids"
+          element={<Bids auctionAddressList={auctionAddressList} />}
+        />
       </Routes>
     </div>
   );

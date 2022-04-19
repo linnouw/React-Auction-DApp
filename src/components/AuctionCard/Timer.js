@@ -2,10 +2,14 @@ import React, { useState, useEffect } from "react";
 //@MUI
 import { Typography } from "@mui/material";
 
-function Timer(props) {
-  const getCountdown = (auctionEnd) => {
-    if (auctionEnd - Math.round(new Date().getTime() / 1000) > 0) {
-      let time = auctionEnd - Math.round(new Date().getTime() / 1000);
+/**
+ * returns a countdown
+ * @param {boolean} auctionEnd
+ */
+function Timer({ auctionEnd }) {
+  const getCountdown = (end) => {
+    if (end - Math.round(new Date().getTime() / 1000) > 0) {
+      let time = end - Math.round(new Date().getTime() / 1000);
       let hours = Math.floor(time / 3600);
       let minutes = Math.floor((time - hours * 3600) / 60);
       let seconds = time - hours * 3600 - minutes * 60;
@@ -25,7 +29,7 @@ function Timer(props) {
 
   return (
     <Typography className="auction-timer">
-      {getCountdown(props.auctionEnd)}
+      {getCountdown(auctionEnd)}
     </Typography>
   );
 }

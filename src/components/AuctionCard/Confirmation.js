@@ -13,7 +13,15 @@ import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../wallet/Connect";
 import my_auction_contract from "../../abi/MyAuction.json";
 
-function Confirmation(props) {
+/**
+ * Modal for bid confirmation: connect to wallet and enter amount of bid.
+ * @param {string} address - address of a specific auction
+ * @param {string} owner - address of the auction owner
+ * @param {boolean} open - state of the modal: open/closed
+ * @param {function} closeModal - open setter
+ * @returns
+ */
+function Confirmation({ address, owner, open, closeModal }) {
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [amountValue, setAmountValue] = useState(null);
 
@@ -27,21 +35,18 @@ function Confirmation(props) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (props.owner !== account) {
+    if (owner !== account) {
       if (amountValue !== null) {
         const web3 = new Web3(
           new Web3.providers.HttpProvider("http://localhost:7545")
         );
         const networkId = await web3.eth.net.getId();
-        const Auction = new web3.eth.Contract(
-          my_auction_contract.abi,
-          props.address
-        );
+        const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
         await Auction.methods
           .bid()
           .send({
             from: account,
-            to: props.address,
+            to: address,
             value: web3.utils.toWei(amountValue, "ether"),
             gas: "2233593",
           })
@@ -52,7 +57,7 @@ function Confirmation(props) {
   };
 
   return (
-    <Modal open={props.open} onClose={props.closeModal}>
+    <Modal open={open} onClose={closeModal}>
       <Box className="modal-box" p={3}>
         <Grid
           container
@@ -88,7 +93,7 @@ function Confirmation(props) {
           )}
           <Grid container direction="row" justifyContent="center" p={2}>
             <Grid item p={1}>
-              <button className="modal-button" onClick={props.closeModal}>
+              <button className="modal-button" onClick={closeModal}>
                 <Stack direction="row">
                   <KeyboardBackspaceIcon />
                   <Typography>Cancel</Typography>
