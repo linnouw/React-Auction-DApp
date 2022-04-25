@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 //styles
 import "./AuctionCard.css";
 //@MUI
@@ -12,6 +12,8 @@ import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../wallet/Connect";
 import my_auction_contract from "../../abi/MyAuction.json";
+//useContext
+import Web3Context from "../../Web3Context";
 
 /**
  * Modal for bid confirmation: connect to wallet and enter amount of bid.
@@ -22,8 +24,33 @@ import my_auction_contract from "../../abi/MyAuction.json";
  * @returns
  */
 function Confirmation({ address, owner, open, closeModal }) {
+  const context = useContext(Web3Context);
+  const { infuraProject } = context;
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [amountValue, setAmountValue] = useState(null);
+  const [privateKey, setPrivateKey] = useState();
+  const [balance, getBalance] = useState();
+
+  const getAccountBalance = async () => {
+    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const accountBalance = await web3.eth.getBalance(
+      account,
+      function (err, result) {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log(web3.utils.fromWei(result, "ether") + " ETH");
+        }
+      }
+    );
+    const accountBalanceInEther =
+      web3.utils.fromWei(accountBalance, "ether") + " ETH";
+    getBalance(accountBalanceInEther);
+  };
+
+  useEffect(() => {
+    getAccountBalance();
+  }, []);
 
   async function connect() {
     try {
@@ -37,12 +64,10 @@ function Confirmation({ address, owner, open, closeModal }) {
     e.preventDefault();
     if (owner !== account) {
       if (amountValue !== null) {
-        const web3 = new Web3(
-          new Web3.providers.HttpProvider("http://localhost:7545")
-        );
-        const networkId = await web3.eth.net.getId();
+        const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
         const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
-        await Auction.methods
+        web3.eth.accounts.wallet.add(privateKey);
+        const data = await Auction.methods
           .bid()
           .send({
             from: account,
@@ -52,6 +77,15 @@ function Confirmation({ address, owner, open, closeModal }) {
           })
           .then(() => alert("Submitted"))
           .catch((error) => alert(error));
+        //sign Tx
+        const txData = {
+          from: account,
+          to: my_auction_contract.options.address,
+          data,
+          chain: "rinkeby",
+        };
+        const receipt = await web3.eth.sendTransaction(txData);
+        console.log(receipt.transactionHash);
       }
     }
   };
@@ -82,6 +116,14 @@ function Confirmation({ address, owner, open, closeModal }) {
               <Typography className="auction-owner">
                 Connected wallet: {account}
               </Typography>
+              <Typography className="auction-owner">
+                Account Balance: {balance}
+              </Typography>
+              <TextField
+                label="Enter your private key here"
+                variant="standard"
+                onChange={(e) => setPrivateKey(e.target.value)}
+              />
               <TextField
                 label="Insert amount to bid"
                 variant="standard"

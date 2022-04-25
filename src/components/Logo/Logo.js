@@ -1,5 +1,5 @@
 //styles
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./Logo.css";
 //components
 import Notifications from "./Notifications";
@@ -18,12 +18,15 @@ import {
 //@Icons
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+//@useContext
+import Web3Context from "../../Web3Context";
 
 /**
  * Contains logo and notification, profile icon buttons
- * @param {string[]} auctionAddressList - list of existing auction addresses fetched from blockchain network
  */
-function Logo({ auctionAddressList }) {
+function Logo() {
+  const context = useContext(Web3Context);
+  const { auctionAddressList } = context;
   //menu bar for profile
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -92,7 +95,6 @@ function Logo({ auctionAddressList }) {
           <MenuItem onClick={handleClose}>My profile</MenuItem>
         </Menu>
         <Notifications
-          auctionAddressList={auctionAddressList}
           id={idNotification}
           open={openNotification}
           anchorEl={anchorElNotification}

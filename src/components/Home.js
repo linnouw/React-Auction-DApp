@@ -8,10 +8,10 @@ import "./Home.css";
  * Fixed component contains logo and navbar
  * @param {address[]} auctionAddressList-list of existing auction addresses fetched from blockchain network
  */
-function Home({ auctionAddressList }) {
+function Home() {
   return (
     <div>
-      <Logo auctionAddressList={auctionAddressList} />
+      <Logo />
       <Navbar />
     </div>
   );

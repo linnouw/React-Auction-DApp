@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 //components
 import Confirmation from "./Confirmation";
 import Timer from "./Timer";
@@ -17,6 +17,8 @@ import {
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import my_auction_contract from "../../abi/MyAuction.json";
+//useContext
+import Web3Context from "../../Web3Context";
 
 /**
  * Contains information (name, description, duration, min increment and starting price) of a started auction.
@@ -25,6 +27,8 @@ import my_auction_contract from "../../abi/MyAuction.json";
  * @param {boolean} auctionFinished - returns true if auction is finished, else false
  */
 function AuctionCard({ address, auctionFinished }) {
+  const context = useContext(Web3Context);
+  const { infuraProject } = context;
   const [open, setOpen] = React.useState(false);
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [auctionEvent, setAuctionEvent] = useState([]);
@@ -37,9 +41,7 @@ function AuctionCard({ address, auctionFinished }) {
 
   useEffect(() => {
     async function load() {
-      const web3 = new Web3(
-        new Web3.providers.HttpProvider("http://localhost:7545")
-      );
+      const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
       //interact with specific contract
       const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
       //get auction content

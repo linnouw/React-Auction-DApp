@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 //components
 import AuctionList from "./AuctionList";
 import AddAuction from "./AddAuction";
@@ -8,12 +8,16 @@ import "./Auctions.css";
 import { Grid, Typography, Stack } from "@mui/material";
 //@Icons
 import AddIcon from "@mui/icons-material/Add";
+//@useContext
+import Web3Context from "../../Web3Context";
 
 /**
  * contains two components : add list button & started auction cards
- * @param {string[]} auctionAddressList - existing auction addresses list
  */
-function Auctions({ auctionAddressList }) {
+function Auctions() {
+  const context = useContext(Web3Context);
+  const { auctionAddressList } = context;
+
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);

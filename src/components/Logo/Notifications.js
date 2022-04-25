@@ -1,10 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 //styles
 import "./Logo.css";
 //components
 import NotificationCard from "./NotificationCard";
 //@MUI
 import { List, Popover, Typography } from "@mui/material";
+//web3
+import Web3 from "web3";
+import { useWeb3React } from "@web3-react/core";
+import my_auction_contract from "../../abi/AuctionList.json";
+//useContext
+import Web3Context from "../../Web3Context";
 
 /**
  * Notification list that appears on click on notification icon button
@@ -14,10 +20,10 @@ import { List, Popover, Typography } from "@mui/material";
  * @param {boolean} open - bool that controls the state of popover if it's open or close
  * @param {number} anchorEl
  * @param {function} onClose - AnchorElNotificationSetter
- * @returns
  */
-function Notifications({ auctionAddressList, id, open, anchorEl, onClose }) {
-  const auctionAddresses = auctionAddressList;
+function Notifications({ id, open, anchorEl, onClose }) {
+  const context = useContext(Web3Context);
+  const { infuraProject, auctionAddressList } = context;
 
   return (
     <Popover
@@ -30,21 +36,18 @@ function Notifications({ auctionAddressList, id, open, anchorEl, onClose }) {
         horizontal: "left",
       }}
     >
-      {typeof auctionAddresses === "undefined" ? (
-        <Typography>No Auction Results</Typography>
-      ) : (
-        <List
-          sx={{
-            width: "100%",
-            maxWidth: 360,
-            bgcolor: "background.paper",
-          }}
-        >
-          {auctionAddresses.map((address) => {
-            return <NotificationCard address={address} />;
+      <List
+        sx={{
+          width: "100%",
+          maxWidth: 360,
+          bgcolor: "background.paper",
+        }}
+      >
+        {typeof auctionAddressList !== "undefined" &&
+          auctionAddressList.map((address, index) => {
+            return <NotificationCard key={index} address={address} />;
           })}
-        </List>
-      )}
+      </List>
     </Popover>
   );
 }

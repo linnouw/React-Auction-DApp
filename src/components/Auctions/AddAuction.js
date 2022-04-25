@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext, useEffect } from "react";
 //styles
 import "./Auctions.css";
 //@MUI
@@ -20,6 +20,8 @@ import Web3 from "web3";
 import auction_list_contract from "../../abi/AuctionList.json";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../wallet/Connect";
+//useContext
+import Web3Context from "../../Web3Context";
 
 /**
  * Modal contains form to create an auction.
@@ -28,12 +30,15 @@ import { injected } from "../../wallet/Connect";
  * @returns
  */
 function AddAuction({ open, closeModal }) {
+  const context = useContext(Web3Context);
+  const { infuraProject } = context;
   const [name, setName] = useState(null);
   const [description, setDescription] = useState(null);
   const [startingPrice, setStartingPrice] = useState(null);
   const [minIncrement, setMinIncrement] = useState(null);
   const [auctionDuration, setAuctionDuration] = useState(null);
   const { active, account, library, activate, deactivate } = useWeb3React();
+  const [privateKey, setPrivateKey] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -44,16 +49,16 @@ function AddAuction({ open, closeModal }) {
       minIncrement !== null &&
       auctionDuration !== null
     ) {
-      const web3 = new Web3(
-        new Web3.providers.HttpProvider("http://localhost:7545")
-      );
+      const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
       const networkId = await web3.eth.net.getId();
       const AuctionListContract = new web3.eth.Contract(
         auction_list_contract.abi,
         auction_list_contract.networks[networkId].address
       );
 
-      await AuctionListContract.methods
+      web3.eth.accounts.wallet.add(privateKey);
+
+      const data = await AuctionListContract.methods
         .createAuctions(
           account,
           name,
@@ -65,6 +70,16 @@ function AddAuction({ open, closeModal }) {
         .send({ from: account, value: "0", gas: "3000000" })
         .then(() => alert("successfully added"))
         .catch((err) => alert(err));
+
+      //sign Tx
+      const txData = {
+        from: account,
+        to: auction_list_contract.options.address,
+        data,
+        chain: "rinkeby",
+      };
+      const receipt = await web3.eth.sendTransaction(txData);
+      console.log(receipt.transactionHash);
     } else alert("Error ! all the fields are required to add an auction.");
   };
 
@@ -116,6 +131,12 @@ function AddAuction({ open, closeModal }) {
               spacing={2}
               p={2}
             >
+              <TextField
+                id="outlined-basic"
+                label="Enter your private key to validate"
+                variant="outlined"
+                onChange={(e) => setPrivateKey(e.target.value)}
+              />
               <TextField
                 id="outlined-basic"
                 label="Name"

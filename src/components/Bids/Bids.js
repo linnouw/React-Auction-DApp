@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 //styles
 import "./Bids.css";
 //@MUI
@@ -8,6 +8,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import Web3 from "web3";
 import { useWeb3React } from "@web3-react/core";
 import my_auction_contract from "../../abi/MyAuction.json";
+//@useContext
+import Web3Context from "../../Web3Context";
 
 const columns = [
   { field: "id", headerName: "ID", flex: 1 },
@@ -111,19 +113,19 @@ const columns = [
 ];
 
 /**
- *
- * @param {string[]} auctionAddressList - existing auctions addresses fetched with web3 from Ethereum network
- * @returns
+ *returns a table with all the bids happened and display information about the auction (state, name, highest bidder, highest bid).
+ *returns bid of the connected wallet.
  */
-function Bids({ auctionAddressList }) {
+function Bids() {
+  const context = useContext(Web3Context);
+  const { auctionAddressList, infuraProject } = context;
+
   const [searchTerm, setSearchTerm] = React.useState("");
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [rows, setRows] = useState([]);
 
   const getAuctionParameters = async (address) => {
-    const web3 = new Web3(
-      new Web3.providers.HttpProvider("http://localhost:7545")
-    );
+    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
     const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
     const event = await Auction.methods.returnContents().call();
     const eventHighestBidder = await Auction.methods.getHighestBidder().call();

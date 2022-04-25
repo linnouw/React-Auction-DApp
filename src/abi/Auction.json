@@ -223,8 +223,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -237,8 +236,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -251,8 +249,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [
@@ -271,8 +268,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -285,8 +281,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -299,8 +294,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -313,8 +307,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -352,8 +345,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -366,8 +358,7 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function",
-      "constant": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -380,8 +371,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -407,8 +397,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -421,8 +410,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -509,8 +497,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -523,8 +510,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -537,8 +523,7 @@
         }
       ],
       "stateMutability": "payable",
-      "type": "function",
-      "payable": true
+      "type": "function"
     },
     {
       "inputs": [],
@@ -22344,16 +22329,21 @@
     "version": "0.8.11+commit.d7f03943.Emscripten.clang"
   },
   "networks": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x2755210d3991Bb86bf6AD42895863f872Ea13E6D",
+      "transactionHash": "0x664ad3b301eef146d2b4fd4388b4c330c3dd503b4d9ef4420c494566d5734727"
+    },
     "5777": {
       "events": {},
       "links": {},
-      "address": "0xBbBE9755031db08FB19B330aB719B28c7A4D4336",
-      "transactionHash": "0xd7d84ccfc7af912d6d15fad6681b97d81e618b48fa22d6b588e2783b549d20c3"
+      "address": "0x045349aeb20607a47492Fca8f163BA6bfB811Af2",
+      "transactionHash": "0xe573dbf332f638c17733ca96dd0f1432f7bdf94679393c6b64eb2bf65cf849a4"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-04-15T08:20:10.170Z",
-  "networkType": "ethereum",
+  "updatedAt": "2022-04-22T14:25:54.081Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
