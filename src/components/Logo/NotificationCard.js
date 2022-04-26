@@ -36,19 +36,19 @@ function NotificationCard({ address }) {
   }, []);
 
   //set finalised
-  // const handleSubmitFinalised = async (address) => {
-  //   const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
-  //   const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
-  //   await Auction.methods
-  //     .setFinalised()
-  //     .send({ from: account })
-  //     .then((result) => {
-  //       console.log(result);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const handleSubmitFinalised = async (address) => {
+    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
+    await Auction.methods
+      .setFinalised()
+      .send({ from: account })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div>
@@ -58,9 +58,9 @@ function NotificationCard({ address }) {
           secondary={`Auction ID: ${address}`}
         />
         <ListItemButton
-        // onClick={() => {
-        //   handleSubmitFinalised(address);
-        // }}
+          onClick={() => {
+            handleSubmitFinalised(address);
+          }}
         >
           OK
         </ListItemButton>

@@ -43,11 +43,11 @@ function AddAuction({ open, closeModal }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
-      name !== null &&
-      description !== null &&
-      startingPrice !== null &&
-      minIncrement !== null &&
-      auctionDuration !== null
+      name &&
+      description &&
+      startingPrice &&
+      minIncrement &&
+      auctionDuration
     ) {
       const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
       const networkId = await web3.eth.net.getId();
@@ -58,6 +58,17 @@ function AddAuction({ open, closeModal }) {
 
       web3.eth.accounts.wallet.add(privateKey);
 
+      const gas = await AuctionListContract.methods
+        .createAuctions(
+          account,
+          name,
+          description,
+          parseInt(startingPrice),
+          parseInt(auctionDuration),
+          parseInt(minIncrement)
+        )
+        .estimateGas();
+
       const data = await AuctionListContract.methods
         .createAuctions(
           account,
@@ -67,7 +78,7 @@ function AddAuction({ open, closeModal }) {
           parseInt(auctionDuration),
           parseInt(minIncrement)
         )
-        .send({ from: account, value: "0", gas: "3000000" })
+        .send({ from: account, gas })
         .then(() => alert("successfully added"))
         .catch((err) => alert(err));
 

@@ -23,7 +23,7 @@ function App() {
   //blockchain networks
   // const infuraProject = "http://localhost:7545";
   const infuraProject =
-    "https://eth-rinkeby.alchemyapi.io/v2/DceuYbAPtExCOPi0BhwaBmcRwBticwWT";
+    "https://rinkeby.infura.io/v3/c028fca8afac41e7ab5140d07cfb5fa5";
 
   /**fetch auction addresses list with web3*/
   async function load() {

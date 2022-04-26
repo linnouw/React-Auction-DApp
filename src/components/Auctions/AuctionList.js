@@ -36,9 +36,16 @@ function AuctionList({ address }) {
       await setAuctionFinished(true);
 
       //transfer ether from smart contract to auction owner & refund bidders
+      const HighestBidGas = await Auction.methods
+        .transferHighestBid()
+        .estimateGas();
+      const refundBiddersGas = await Auction.methods
+        .refundBidders()
+        .estimateGas();
+
       await Auction.methods
         .transferHighestBid()
-        .send({ from: account, gas: 3000000 })
+        .send({ from: account, gas: HighestBidGas })
         .then((result) => {
           console.log(result);
         })
@@ -47,7 +54,7 @@ function AuctionList({ address }) {
         });
       await Auction.methods
         .refundBidders()
-        .send({ from: account, gas: 3000000 })
+        .send({ from: account, gas: refundBiddersGas })
         .then((result) => {
           console.log(result);
         })

@@ -67,13 +67,16 @@ function Confirmation({ address, owner, open, closeModal }) {
         const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
         const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
         web3.eth.accounts.wallet.add(privateKey);
+
+        const gas = await Auction.methods.bid().estimateGas();
+
         const data = await Auction.methods
           .bid()
           .send({
             from: account,
             to: address,
             value: web3.utils.toWei(amountValue, "ether"),
-            gas: "2233593",
+            gas,
           })
           .then(() => alert("Submitted"))
           .catch((error) => alert(error));
