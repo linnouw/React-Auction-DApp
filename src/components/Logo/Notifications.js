@@ -23,7 +23,7 @@ import Web3Context from "../../Web3Context";
  */
 function Notifications({ id, open, anchorEl, onClose }) {
   const context = useContext(Web3Context);
-  const { infuraProject, auctionAddressList } = context;
+  const { projectUrl, auctionAddressList } = context;
 
   return (
     <Popover
@@ -44,9 +44,9 @@ function Notifications({ id, open, anchorEl, onClose }) {
         }}
       >
         {typeof auctionAddressList !== "undefined" &&
-          auctionAddressList.map((address, index) => {
-            return <NotificationCard key={index} address={address} />;
-          })}
+          auctionAddressList.map((address, index) => (
+            <NotificationCard key={index} address={address} />
+          ))}
       </List>
     </Popover>
   );

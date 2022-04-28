@@ -28,12 +28,11 @@ import Web3Context from "../../Web3Context";
  */
 function AuctionCard({ address, auctionFinished }) {
   const context = useContext(Web3Context);
-  const { infuraProject } = context;
+  const { projectUrl } = context;
   const [open, setOpen] = React.useState(false);
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [auctionEvent, setAuctionEvent] = useState([]);
   const [highestBid, setHighestBid] = useState(null);
-  const [auctionStart, setAuctionStart] = useState(null);
   const [highestBidder, setHighestBidder] = useState();
 
   const handleOpen = () => setOpen(true);
@@ -41,7 +40,7 @@ function AuctionCard({ address, auctionFinished }) {
 
   useEffect(() => {
     async function load() {
-      const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+      const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
       //interact with specific contract
       const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
       //get auction content
@@ -59,7 +58,7 @@ function AuctionCard({ address, auctionFinished }) {
   });
 
   return (
-    <div>
+    <>
       <Card sx={{ maxWidth: 300 }} className="auction-card">
         <CardContent>
           <Grid
@@ -84,45 +83,21 @@ function AuctionCard({ address, auctionFinished }) {
         </CardContent>
         <CardActions>
           <Grid container direction="column">
-            {auctionFinished ? (
-              <>
-                {highestBidder !==
-                "0x0000000000000000000000000000000000000000" ? (
-                  <>
-                    <Typography className="auction-winner-title">
-                      Winner of the auction
-                    </Typography>
-                    <Typography className="auction-winner">
-                      {highestBidder}
-                    </Typography>
-                  </>
-                ) : (
-                  <>
-                    <Typography className="no-bidders-title">
-                      No Bidders
-                    </Typography>
-                  </>
-                )}
-              </>
+            {highestBid * Math.pow(10, -18) !== 0 ? (
+              <Typography className="blink">
+                Current highest bid : {highestBid * Math.pow(10, -18)} ETH
+              </Typography>
             ) : (
-              <>
-                {highestBid * Math.pow(10, -18) !== 0 ? (
-                  <Typography className="blink">
-                    Current highest bid : {highestBid * Math.pow(10, -18)} ETH
-                  </Typography>
-                ) : (
-                  <></>
-                )}
-                {account === auctionEvent[0] ? (
-                  <Button disabled variant="text">
-                    Bid on
-                  </Button>
-                ) : (
-                  <Button variant="text" onClick={handleOpen}>
-                    Bid on
-                  </Button>
-                )}
-              </>
+              <></>
+            )}
+            {account === auctionEvent[0] ? (
+              <Button disabled variant="text">
+                Bid on
+              </Button>
+            ) : (
+              <Button variant="text" onClick={handleOpen}>
+                Bid on
+              </Button>
             )}
           </Grid>
         </CardActions>
@@ -134,7 +109,7 @@ function AuctionCard({ address, auctionFinished }) {
         open={open}
         closeModal={handleClose}
       />
-    </div>
+    </>
   );
 }
 

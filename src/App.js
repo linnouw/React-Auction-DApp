@@ -21,13 +21,13 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   //blockchain networks
-  // const infuraProject = "http://localhost:7545";
-  const infuraProject =
-    "https://rinkeby.infura.io/v3/c028fca8afac41e7ab5140d07cfb5fa5";
+  const projectUrl = "http://localhost:7545";
+  // const projectUrl =
+  //   "https://rinkeby.infura.io/v3/c028fca8afac41e7ab5140d07cfb5fa5";
 
   /**fetch auction addresses list with web3*/
   async function load() {
-    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
     const networkId = await web3.eth.net.getId();
     const AuctionListContract = new web3.eth.Contract(
       auction_list_contract.abi,
@@ -41,11 +41,11 @@ function App() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [auctionAddressList]);
 
   return (
     <div>
-      <Web3Context.Provider value={{ auctionAddressList, infuraProject }}>
+      <Web3Context.Provider value={{ auctionAddressList, projectUrl }}>
         <Home />
         <Routes>
           <Route path="/" element={<Dashboard />} />

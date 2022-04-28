@@ -17,16 +17,16 @@ import Web3Context from "../../Web3Context";
  */
 function AuctionList({ address }) {
   const context = useContext(Web3Context);
-  const { infuraProject } = context;
+  const { projectUrl } = context;
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [auctionFinished, setAuctionFinished] = useState();
 
   useEffect(() => {
     load();
-  }, [account]);
+  }, [auctionFinished]);
 
   async function load() {
-    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
     //interact with specific contract
     const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
     //get auctionEnd value
@@ -65,9 +65,13 @@ function AuctionList({ address }) {
   }
 
   return (
-    <Grid item xs={3}>
-      <AuctionCard address={address} auctionFinished={auctionFinished} />
-    </Grid>
+    <>
+      {!auctionFinished && (
+        <Grid item xs={3}>
+          <AuctionCard address={address} auctionFinished={auctionFinished} />
+        </Grid>
+      )}
+    </>
   );
 }
 

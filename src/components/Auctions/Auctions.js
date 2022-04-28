@@ -39,13 +39,10 @@ function Auctions() {
       <AddAuction open={open} closeModal={handleClose} />
 
       <Grid item container>
-        {typeof auctionAddressList === "undefined" ? (
-          <></>
-        ) : (
+        {typeof auctionAddressList !== "undefined" &&
           auctionAddressList.map((address, index) => (
             <AuctionList address={address} key={index} />
-          ))
-        )}
+          ))}
       </Grid>
     </Grid>
   );

@@ -16,14 +16,13 @@ import Web3Context from "../../Web3Context";
  */
 function NotificationCard({ address }) {
   const context = useContext(Web3Context);
-  const { infuraProject } = context;
+  const { projectUrl } = context;
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [highestBidder, setHighestBidder] = useState();
-  const [auctionState, setAuctionState] = useState();
 
   //fetch data specific to address with web3
   async function load() {
-    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
     //interact with specific contract
     const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
     //getHighestBid
@@ -33,11 +32,11 @@ function NotificationCard({ address }) {
 
   useEffect(() => {
     load();
-  }, []);
+  });
 
   //set finalised
   const handleSubmitFinalised = async (address) => {
-    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
     const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
     await Auction.methods
       .setFinalised()

@@ -25,14 +25,14 @@ import Web3Context from "../../Web3Context";
  */
 function Confirmation({ address, owner, open, closeModal }) {
   const context = useContext(Web3Context);
-  const { infuraProject } = context;
+  const { projectUrl } = context;
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [amountValue, setAmountValue] = useState(null);
   const [privateKey, setPrivateKey] = useState();
   const [balance, getBalance] = useState();
 
   const getAccountBalance = async () => {
-    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
     const accountBalance = await web3.eth.getBalance(
       account,
       function (err, result) {
@@ -50,7 +50,7 @@ function Confirmation({ address, owner, open, closeModal }) {
 
   useEffect(() => {
     getAccountBalance();
-  }, []);
+  }, [account]);
 
   async function connect() {
     try {
@@ -64,11 +64,12 @@ function Confirmation({ address, owner, open, closeModal }) {
     e.preventDefault();
     if (owner !== account) {
       if (amountValue !== null) {
-        const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+        const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
         const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
         web3.eth.accounts.wallet.add(privateKey);
 
         const gas = await Auction.methods.bid().estimateGas();
+        const gasPrice = await web3.eth.getGasPrice();
 
         const data = await Auction.methods
           .bid()
@@ -77,6 +78,7 @@ function Confirmation({ address, owner, open, closeModal }) {
             to: address,
             value: web3.utils.toWei(amountValue, "ether"),
             gas,
+            gasPrice,
           })
           .then(() => alert("Submitted"))
           .catch((error) => alert(error));
@@ -122,11 +124,6 @@ function Confirmation({ address, owner, open, closeModal }) {
               <Typography className="auction-owner">
                 Account Balance: {balance}
               </Typography>
-              <TextField
-                label="Enter your private key here"
-                variant="standard"
-                onChange={(e) => setPrivateKey(e.target.value)}
-              />
               <TextField
                 label="Insert amount to bid"
                 variant="standard"

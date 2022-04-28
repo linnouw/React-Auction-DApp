@@ -18,7 +18,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -56,7 +57,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [
@@ -94,7 +96,8 @@
       "name": "createAuctions",
       "outputs": [],
       "stateMutability": "payable",
-      "type": "function"
+      "type": "function",
+      "payable": true
     },
     {
       "inputs": [],
@@ -107,7 +110,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     },
     {
       "inputs": [],
@@ -152,7 +156,8 @@
         }
       ],
       "stateMutability": "view",
-      "type": "function"
+      "type": "function",
+      "constant": true
     }
   ],
   "metadata": "{\"compiler\":{\"version\":\"0.8.11+commit.d7f03943\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"name\":\"auctions\",\"outputs\":[{\"internalType\":\"contract MyAuction\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address payable\",\"name\":\"_owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"_name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"_description\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"_startingPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_auctionDuration\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"_minIncrement\",\"type\":\"uint256\"}],\"name\":\"createAuctions\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllAuctionDetails\",\"outputs\":[{\"components\":[{\"internalType\":\"address payable\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"description\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"startingPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"auctionDuration\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minIncrement\",\"type\":\"uint256\"}],\"internalType\":\"struct AuctionList.Details[]\",\"name\":\"\",\"type\":\"tuple[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"getAllAuctions\",\"outputs\":[{\"internalType\":\"contract MyAuction[]\",\"name\":\"\",\"type\":\"address[]\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"newDetails\",\"outputs\":[{\"internalType\":\"address payable\",\"name\":\"owner\",\"type\":\"address\"},{\"internalType\":\"string\",\"name\":\"name\",\"type\":\"string\"},{\"internalType\":\"string\",\"name\":\"description\",\"type\":\"string\"},{\"internalType\":\"uint256\",\"name\":\"startingPrice\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"auctionDuration\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"minIncrement\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"project:/contracts/AuctionList.sol\":\"AuctionList\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"project:/contracts/Auction.sol\":{\"keccak256\":\"0xb05a0c972cf9c8ec958c02b4195e83c738c29643730e081a04d784ce10431590\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://72330f240129a6ba8c218082daff947a29d2b55596cb4fdb099e06366e800427\",\"dweb:/ipfs/QmS5XjFYErDtAwG143M4fG2CEVrYUtSXS5T3ov8s8x3j9z\"]},\"project:/contracts/AuctionList.sol\":{\"keccak256\":\"0xbf8b99053c36d60843738cbc38a011b1777cd22d5e86ef2723b8c0315064de39\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://8e35f218bc156d852f68dfb262fe435ba95370b9bd6a2162e855032ae98ca452\",\"dweb:/ipfs/QmQMWM182KMX73TScRL2o3ujhqavHwLXVdnneV3xrnMJ2k\"]}},\"version\":1}",
@@ -10735,12 +10740,13 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x0f0ba61cDb568d57187726DBFD4205DE9aE49b4B",
-      "transactionHash": "0x32861ae1fa1d62028c9d2a7a0b99a53c80978bfcd031d95f55e60f8ba9f72154"
+      "address": "0x6C9E9ff779c7B46c5A0CEd60D72B8f03815F53Bf",
+      "transactionHash": "0x8fe5d10dde834c4a5a6a2d835367a4bba509b77558c086f41f91aba600261173"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2022-04-25T08:20:07.837Z",
+  "updatedAt": "2022-04-27T14:14:03.416Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

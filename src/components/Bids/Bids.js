@@ -118,14 +118,14 @@ const columns = [
  */
 function Bids() {
   const context = useContext(Web3Context);
-  const { auctionAddressList, infuraProject } = context;
+  const { auctionAddressList, projectUrl } = context;
 
   const [searchTerm, setSearchTerm] = React.useState("");
   const { active, account, library, activate, deactivate } = useWeb3React();
   const [rows, setRows] = useState([]);
 
   const getAuctionParameters = async (address) => {
-    const web3 = new Web3(new Web3.providers.HttpProvider(infuraProject));
+    const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
     const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
     const event = await Auction.methods.returnContents().call();
     const eventHighestBidder = await Auction.methods.getHighestBidder().call();
