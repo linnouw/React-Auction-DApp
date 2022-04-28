@@ -1,7 +1,7 @@
 
 # dependencies
 /node_modules
-./src/abi/
+./src/abi/*.json
 /.pnp
 .pnp.js
 
