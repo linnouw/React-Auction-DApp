@@ -12,7 +12,9 @@ Frontend UI for Generic trading platform by Akka. Every user can create an aucti
 ##To get started
 Before starting this project, clone Ethereum-auction-app on your local machine and follow its steps to start ganache network.
 
-Once you deployed Ethereum-auction-app on Ganache. Copy paste Auction.json, AuctionList.json MyAuction.json (under built\contracts in Ethereum-auction-app ) under src/abi.
+Once you deployed Ethereum-auction-app on Ganache:
+1. Create a folder ./src/abi
+2. Copy paste "Auction.json", "AuctionList.json" & "MyAuction.json" (under ./built/contracts in Ethereum-auction-app ) under ./src/abi.
 
 To install dependencies
 `npm install`
