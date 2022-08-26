@@ -18,12 +18,12 @@ import Web3Context from "../../Web3Context";
 function AuctionList({ address }) {
   const context = useContext(Web3Context);
   const { projectUrl } = context;
-  const { active, account, library, activate, deactivate } = useWeb3React();
-  const [auctionFinished, setAuctionFinished] = useState();
+  const { account } = useWeb3React();
+  const [auctionFinished, setAuctionFinished] = useState(false);
 
   useEffect(() => {
     load();
-  }, [auctionFinished]);
+  }, [account]);
 
   async function load() {
     const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
@@ -61,12 +61,14 @@ function AuctionList({ address }) {
         .catch((error) => {
           console.log(error);
         });
-    } else await setAuctionFinished(false);
+    }
   }
 
   return (
     <>
-      {!auctionFinished && (
+      {auctionFinished ? (
+        <></>
+      ) : (
         <Grid item xs={3}>
           <AuctionCard address={address} auctionFinished={auctionFinished} />
         </Grid>

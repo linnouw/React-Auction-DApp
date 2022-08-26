@@ -66,31 +66,18 @@ function Confirmation({ address, owner, open, closeModal }) {
       if (amountValue !== null) {
         const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
         const Auction = new web3.eth.Contract(my_auction_contract.abi, address);
-        web3.eth.accounts.wallet.add(privateKey);
 
-        const gas = await Auction.methods.bid().estimateGas();
-        const gasPrice = await web3.eth.getGasPrice();
-
-        const data = await Auction.methods
+        await Auction.methods
           .bid()
           .send({
             from: account,
             to: address,
             value: web3.utils.toWei(amountValue, "ether"),
-            gas,
-            gasPrice,
+            gas: "3000000",
           })
           .then(() => alert("Submitted"))
           .catch((error) => alert(error));
-        //sign Tx
-        const txData = {
-          from: account,
-          to: my_auction_contract.options.address,
-          data,
-          chain: "rinkeby",
-        };
-        const receipt = await web3.eth.sendTransaction(txData);
-        console.log(receipt.transactionHash);
+        window.location.reload(false);
       }
     }
   };
@@ -105,9 +92,19 @@ function Confirmation({ address, owner, open, closeModal }) {
           alignItems="center"
           p={2}
         >
-          <Typography variant="h6">
-            You are about to bid on this auction
-          </Typography>
+          {account !== owner ? (
+            <>
+              <Typography variant="h6">
+                You are about to bid on this auction
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Typography variant="h6">
+                You can't bid on your own auction
+              </Typography>
+            </>
+          )}
         </Grid>
         <Grid
           container
@@ -124,11 +121,13 @@ function Confirmation({ address, owner, open, closeModal }) {
               <Typography className="auction-owner">
                 Account Balance: {balance}
               </Typography>
-              <TextField
-                label="Insert amount to bid"
-                variant="standard"
-                onChange={(e) => setAmountValue(e.target.value)}
-              />
+              {account !== owner && (
+                <TextField
+                  label="Insert amount to bid"
+                  variant="standard"
+                  onChange={(e) => setAmountValue(e.target.value)}
+                />
+              )}
             </>
           ) : (
             <Typography>Connect to your cryptowallet</Typography>
@@ -144,12 +143,14 @@ function Confirmation({ address, owner, open, closeModal }) {
             </Grid>
             {active ? (
               <Grid item p={1}>
-                <button className="modal-button" onClick={handleSubmit}>
-                  <Stack direction="row">
-                    <AttachMoneyIcon />
-                    <Typography>Bid</Typography>
-                  </Stack>
-                </button>
+                {account !== owner && (
+                  <button className="modal-button" onClick={handleSubmit}>
+                    <Stack direction="row">
+                      <AttachMoneyIcon />
+                      <Typography>Bid</Typography>
+                    </Stack>
+                  </button>
+                )}
               </Grid>
             ) : (
               <Grid item p={1}>
@@ -162,7 +163,6 @@ function Confirmation({ address, owner, open, closeModal }) {
               </Grid>
             )}
           </Grid>
-          <Grid></Grid>
         </Grid>
       </Box>
     </Modal>

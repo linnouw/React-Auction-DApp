@@ -1,8 +1,6 @@
 //styles
-import React, { useEffect, useState, useContext } from "react";
+import React from "react";
 import "./Logo.css";
-//components
-import Notifications from "./Notifications";
 //@MUI
 import {
   Box,
@@ -12,21 +10,15 @@ import {
   Menu,
   MenuItem,
   Badge,
-  Popover,
-  Typography,
 } from "@mui/material";
 //@Icons
 import AssignmentIndIcon from "@mui/icons-material/AssignmentInd";
 import NotificationsIcon from "@mui/icons-material/Notifications";
-//@useContext
-import Web3Context from "../../Web3Context";
 
 /**
  * Contains logo and notification, profile icon buttons
  */
 function Logo() {
-  const context = useContext(Web3Context);
-  const { auctionAddressList } = context;
   //menu bar for profile
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -40,16 +32,14 @@ function Logo() {
   };
 
   //notification popover
-  const [anchorElNotification, setAnchorElNotification] = React.useState(null);
-  const openNotification = Boolean(anchorElNotification);
-  const idNotification = openNotification ? "simple-popover" : undefined;
+  const [openModal, setOpenModal] = React.useState(false);
 
-  const handleClickNotification = (event) => {
-    setAnchorElNotification(event.currentTarget);
+  const handleClickOpen = () => {
+    setOpenModal(true);
   };
 
-  const handleCloseNotification = () => {
-    setAnchorElNotification(null);
+  const handleClickClose = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -66,7 +56,7 @@ function Logo() {
           </span>
         </Grid>
         <Grid item>
-          <IconButton onClick={handleClickNotification}>
+          <IconButton onClick={handleClickOpen}>
             <Badge color="error" variant="dot">
               <NotificationsIcon className="icon" />
             </Badge>
@@ -94,16 +84,6 @@ function Logo() {
         >
           <MenuItem onClick={handleClose}>My profile</MenuItem>
         </Menu>
-        <Notifications
-          id={idNotification}
-          open={openNotification}
-          anchorEl={anchorElNotification}
-          onClose={handleCloseNotification}
-          anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
-          }}
-        />
       </Grid>
     </Box>
   );

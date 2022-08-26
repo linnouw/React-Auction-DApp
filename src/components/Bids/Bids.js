@@ -10,6 +10,7 @@ import { useWeb3React } from "@web3-react/core";
 import my_auction_contract from "../../abi/MyAuction.json";
 //@useContext
 import Web3Context from "../../Web3Context";
+import ReactLoading from "react-loading";
 
 const columns = [
   { field: "id", headerName: "ID", flex: 1 },
@@ -121,8 +122,9 @@ function Bids() {
   const { auctionAddressList, projectUrl } = context;
 
   const [searchTerm, setSearchTerm] = React.useState("");
-  const { active, account, library, activate, deactivate } = useWeb3React();
+  const { account } = useWeb3React();
   const [rows, setRows] = useState([]);
+  const [loaded, setLoaded] = useState(false);
 
   const getAuctionParameters = async (address) => {
     const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
@@ -146,54 +148,78 @@ function Bids() {
     };
   };
 
+  async function load() {
+    const bidRows = await Promise.all(
+      auctionAddressList.map(async (address) => {
+        return await getAuctionParameters(address);
+      })
+    );
+
+    setRows(bidRows);
+    setLoaded(true);
+  }
+
   useEffect(() => {
-    async function load() {
-      const bidRows = await Promise.all(
-        auctionAddressList.map(async (address) => {
-          return await getAuctionParameters(address);
-        })
-      );
-
-      setRows(bidRows);
-    }
-
     load();
-  });
+  }, [rows]);
 
-  const filteredRows = rows.filter((row) => row.name.includes(searchTerm));
+  const filteredRows = rows.filter(
+    (row) =>
+      row.name.includes(searchTerm) ||
+      row.name.toLowerCase().includes(searchTerm)
+  );
 
   return (
-    <Grid container direction="row">
-      <Grid
-        item
-        p={2}
-        container
-        direction="row"
-        justifyContent="flex-end"
-        alignItems="center"
-      >
-        <TextField
-          id="outlined-basic"
-          label="Enter name of a product"
-          variant="outlined"
-          className="bids-textfield"
-          onChange={(event) => {
-            setSearchTerm(event.target.value);
-          }}
-        />
-      </Grid>
-      <Grid item p={2} xs={12}>
-        <div style={{ height: 400, width: "100%" }}>
-          <DataGrid
-            rows={filteredRows}
-            columns={columns}
-            pageSize={5}
-            rowsPerPageOptions={[5]}
-            disableSelectionOnClick
+    <>
+      {!loaded ? (
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          mt={5}
+        >
+          <ReactLoading
+            type={"spin"}
+            color={"#a0a0a0"}
+            height={50}
+            width={50}
           />
-        </div>
-      </Grid>
-    </Grid>
+        </Grid>
+      ) : (
+        <Grid container direction="row">
+          <Grid
+            item
+            p={2}
+            container
+            direction="row"
+            justifyContent="flex-end"
+            alignItems="center"
+          >
+            <TextField
+              id="outlined-basic"
+              label="Enter name of a product"
+              variant="outlined"
+              className="bids-textfield"
+              onChange={(event) => {
+                setSearchTerm(event.target.value);
+              }}
+            />
+          </Grid>
+          <Grid item p={2} xs={12}>
+            <div style={{ height: 850, width: "100%" }}>
+              <DataGrid
+                rows={filteredRows}
+                columns={columns}
+                pageSize={10}
+                rowsPerPageOptions={[5]}
+                disableSelectionOnClick
+              />
+            </div>
+          </Grid>
+        </Grid>
+      )}
+    </>
   );
 }
 

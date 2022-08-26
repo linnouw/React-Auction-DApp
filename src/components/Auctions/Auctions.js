@@ -38,7 +38,7 @@ function Auctions() {
       </button>
       <AddAuction open={open} closeModal={handleClose} />
 
-      <Grid item container>
+      <Grid item container direction={{ xs: "column", md: "row" }}>
         {typeof auctionAddressList !== "undefined" &&
           auctionAddressList.map((address, index) => (
             <AuctionList address={address} key={index} />

@@ -9,12 +9,12 @@ import {
   Box,
   TextField,
   InputAdornment,
-  Grid,
 } from "@mui/material";
 //@Icons
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
+import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 //web3
 import Web3 from "web3";
 import auction_list_contract from "../../abi/AuctionList.json";
@@ -22,7 +22,10 @@ import { useWeb3React } from "@web3-react/core";
 import { injected } from "../../wallet/Connect";
 //useContext
 import Web3Context from "../../Web3Context";
+//ipfs
+import { create } from "ipfs-http-client";
 
+const client = create("https://ipfs.infura.io:5001/api/v0");
 /**
  * Modal contains form to create an auction.
  * @param {boolean} open - state of the modal: closed or open
@@ -38,6 +41,7 @@ function AddAuction({ open, closeModal }) {
   const [minIncrement, setMinIncrement] = useState(null);
   const [auctionDuration, setAuctionDuration] = useState(null);
   const { active, account, library, activate, deactivate } = useWeb3React();
+  const [fileUrl, setFileUrl] = useState();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -46,7 +50,8 @@ function AddAuction({ open, closeModal }) {
       description &&
       startingPrice &&
       minIncrement &&
-      auctionDuration
+      auctionDuration &&
+      fileUrl
     ) {
       const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
       const networkId = await web3.eth.net.getId();
@@ -62,12 +67,13 @@ function AddAuction({ open, closeModal }) {
           description,
           parseInt(startingPrice),
           parseInt(auctionDuration),
-          parseInt(minIncrement)
+          parseInt(minIncrement),
+          fileUrl
         )
         .estimateGas({ from: account });
 
       const gasPrice = await web3.eth.getGasPrice();
-
+      console.log(gasPrice);
       const tx = await AuctionListContract.methods
         .createAuctions(
           account,
@@ -75,11 +81,13 @@ function AddAuction({ open, closeModal }) {
           description,
           parseInt(startingPrice),
           parseInt(auctionDuration),
-          parseInt(minIncrement)
+          parseInt(minIncrement),
+          fileUrl
         )
         .send({ from: account, gas, gasPrice })
         .then((response) => alert("successfully added"))
         .catch((err) => alert(err));
+      window.location.reload(false);
     } else alert("Error ! all the fields are required to add an auction.");
   };
 
@@ -91,22 +99,24 @@ function AddAuction({ open, closeModal }) {
     }
   }
 
-  const decreaseDuration = () => {
-    if (auctionDuration <= 0) {
-      setAuctionDuration(0);
-    } else {
-      setAuctionDuration(auctionDuration - 1);
-    }
-  };
-
-  const increaseDuration = () => {
-    setAuctionDuration(auctionDuration + 1);
-  };
-
   const onChange = (e) => {
     const value = parseInt(e.target.value);
     if (value >= 0) {
       setAuctionDuration(value);
+    }
+  };
+
+  const captureFile = async (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const file = e.target.files[0];
+    const added = await client.add(file);
+    try {
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      setFileUrl(url);
+      console.log(fileUrl);
+    } catch (error) {
+      console.log("Error uploading file:", error);
     }
   };
 
@@ -137,13 +147,13 @@ function AddAuction({ open, closeModal }) {
                 variant="outlined"
                 onChange={(e) => setName(e.target.value)}
               />
-
               <TextField
                 id="outlined-basic"
                 label="Description"
                 variant="outlined"
                 onChange={(e) => setDescription(e.target.value)}
               />
+              <input type="file" accept=".png, .jpeg" onChange={captureFile} />
             </Stack>
             <Stack
               direction="row"
@@ -166,30 +176,12 @@ function AddAuction({ open, closeModal }) {
 
               <TextField
                 id="outlined-basic"
+                type="number"
                 value={auctionDuration}
                 variant="outlined"
                 InputProps={{
                   endAdornment: (
-                    <>
-                      <InputAdornment position="end">MIN</InputAdornment>
-                      <Grid direction="column" pl={1}>
-                        <button
-                          style={{
-                            width: "20px",
-                            height: "20px",
-                          }}
-                          onClick={increaseDuration}
-                        >
-                          +
-                        </button>
-                        <button
-                          style={{ width: "20px", height: "20px" }}
-                          onClick={decreaseDuration}
-                        >
-                          -
-                        </button>
-                      </Grid>
-                    </>
+                    <InputAdornment position="end">MIN</InputAdornment>
                   ),
                 }}
                 onChange={onChange}

@@ -16,14 +16,8 @@ import auction_list_contract from "./abi/AuctionList.json";
 import Web3Context from "./Web3Context";
 
 function App() {
-  /**store auction list*/
   const [auctionAddressList, setAuctionAddressList] = useState();
-  const [isLoaded, setIsLoaded] = useState(false);
-
-  //blockchain networks
   const projectUrl = "http://localhost:7545";
-  // const projectUrl =
-  //   "https://rinkeby.infura.io/v3/c028fca8afac41e7ab5140d07cfb5fa5";
 
   /**fetch auction addresses list with web3*/
   async function load() {
@@ -35,7 +29,6 @@ function App() {
     );
 
     const auctions = await AuctionListContract.methods.getAllAuctions().call();
-
     setAuctionAddressList(auctions);
   }
 
@@ -45,7 +38,12 @@ function App() {
 
   return (
     <div>
-      <Web3Context.Provider value={{ auctionAddressList, projectUrl }}>
+      <Web3Context.Provider
+        value={{
+          auctionAddressList,
+          projectUrl,
+        }}
+      >
         <Home />
         <Routes>
           <Route path="/" element={<Dashboard />} />
