@@ -6,8 +6,7 @@ import "./Auctions.css";
 //@MUI
 import { Grid } from "@mui/material";
 //web3
-import Web3 from "web3";
-import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3/dist/web3.min.js";
 import my_auction_contract from "../../abi/MyAuction.json";
 //useContext
 import Web3Context from "../../Web3Context";
@@ -18,8 +17,28 @@ import Web3Context from "../../Web3Context";
 function AuctionList({ address }) {
   const context = useContext(Web3Context);
   const { projectUrl } = context;
-  const { account } = useWeb3React();
   const [auctionFinished, setAuctionFinished] = useState(false);
+
+  const [haveMetamask, sethaveMetamask] = React.useState(true);
+  const [account, setAccount] = React.useState('');
+  const [active, setActive] = React.useState(false);
+
+  const { ethereum } = window;
+
+  const connect = async () => {
+    try {
+      if (!ethereum) {
+        sethaveMetamask(false);
+      }
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      setAccount(accounts[0]);
+      setActive(true);
+    } catch (error) {
+      setActive(false);
+    }
+  };
 
   useEffect(() => {
     load();

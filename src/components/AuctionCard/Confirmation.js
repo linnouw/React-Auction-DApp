@@ -8,8 +8,7 @@ import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import CheckIcon from "@mui/icons-material/Check";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 //web3
-import Web3 from "web3";
-import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3/dist/web3.min.js";
 import { injected } from "../../wallet/Connect";
 import my_auction_contract from "../../abi/MyAuction.json";
 //useContext
@@ -26,10 +25,30 @@ import Web3Context from "../../Web3Context";
 function Confirmation({ address, owner, open, closeModal }) {
   const context = useContext(Web3Context);
   const { projectUrl } = context;
-  const { active, account, library, activate, deactivate } = useWeb3React();
   const [amountValue, setAmountValue] = useState(null);
   const [privateKey, setPrivateKey] = useState();
   const [balance, getBalance] = useState();
+
+  const [haveMetamask, sethaveMetamask] = React.useState(true);
+  const [account, setAccount] = React.useState('');
+  const [active, setActive] = React.useState(false);
+
+  const { ethereum } = window;
+
+  const connect = async () => {
+    try {
+      if (!ethereum) {
+        sethaveMetamask(false);
+      }
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      setAccount(accounts[0]);
+      setActive(true);
+    } catch (error) {
+      setActive(false);
+    }
+  };
 
   const getAccountBalance = async () => {
     const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
@@ -52,13 +71,6 @@ function Confirmation({ address, owner, open, closeModal }) {
     getAccountBalance();
   }, [account]);
 
-  async function connect() {
-    try {
-      await activate(injected);
-    } catch (ex) {
-      console.log(ex);
-    }
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

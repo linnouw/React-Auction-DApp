@@ -5,8 +5,7 @@ import "./Bids.css";
 import { Grid, Box, Typography, Stack, TextField } from "@mui/material";
 import { DataGrid } from "@mui/x-data-grid";
 //web3
-import Web3 from "web3";
-import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3/dist/web3.min.js";
 import my_auction_contract from "../../abi/MyAuction.json";
 //@useContext
 import Web3Context from "../../Web3Context";
@@ -122,9 +121,29 @@ function Bids() {
   const { auctionAddressList, projectUrl } = context;
 
   const [searchTerm, setSearchTerm] = React.useState("");
-  const { account } = useWeb3React();
   const [rows, setRows] = useState([]);
   const [loaded, setLoaded] = useState(false);
+
+  const [haveMetamask, sethaveMetamask] = React.useState(true);
+  const [account, setAccount] = React.useState('');
+  const [active, setActive] = React.useState(false);
+
+  const { ethereum } = window;
+
+  const connect = async () => {
+    try {
+      if (!ethereum) {
+        sethaveMetamask(false);
+      }
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      setAccount(accounts[0]);
+      setActive(true);
+    } catch (error) {
+      setActive(false);
+    }
+  };
 
   const getAuctionParameters = async (address) => {
     const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));

@@ -15,8 +15,7 @@ import {
   CardActions,
 } from "@mui/material";
 //web3
-import Web3 from "web3";
-import { useWeb3React } from "@web3-react/core";
+import Web3 from "web3/dist/web3.min.js";
 import my_auction_contract from "../../abi/MyAuction.json";
 //useContext
 import Web3Context from "../../Web3Context";
@@ -32,7 +31,6 @@ function AuctionCard({ address, auctionFinished }) {
   const { projectUrl } = context;
   const [open, setOpen] = React.useState(false);
   const [openInfos, setOpenInfos] = React.useState(false);
-  const { active, account, library, activate, deactivate } = useWeb3React();
   const [auctionEvent, setAuctionEvent] = useState([]);
   const [highestBid, setHighestBid] = useState(null);
   const [highestBidder, setHighestBidder] = useState();
@@ -42,6 +40,27 @@ function AuctionCard({ address, auctionFinished }) {
   const handleCloseInfos = () => setOpenInfos(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const [haveMetamask, sethaveMetamask] = React.useState(true);
+  const [account, setAccount] = React.useState('');
+  const [active, setActive] = React.useState(false);
+
+  const { ethereum } = window;
+
+  const connect = async () => {
+    try {
+      if (!ethereum) {
+        sethaveMetamask(false);
+      }
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      setAccount(accounts[0]);
+      setActive(true);
+    } catch (error) {
+      setActive(false);
+    }
+  };
 
   async function load() {
     const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));

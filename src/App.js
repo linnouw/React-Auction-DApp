@@ -17,7 +17,7 @@ import Web3Context from "./Web3Context";
 
 function App() {
   const [auctionAddressList, setAuctionAddressList] = useState();
-  const projectUrl = "http://localhost:7545";
+  const projectUrl = "http://localhost:8545";
 
   /**fetch auction addresses list with web3*/
   async function load() {

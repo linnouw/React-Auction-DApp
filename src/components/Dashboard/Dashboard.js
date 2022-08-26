@@ -35,8 +35,8 @@ function Dashboard() {
   const [labels, setLabels] = useState();
   const [doughnutData, setDoughnutData] = useState();
   const [barData, setBarData] = useState();
-  const [lowStartPrice, setLowStartPrice] = useState();
-  const [newOwner, setNewOwner] = useState();
+  const [lowStartPrice, setLowStartPrice] = useState("");
+  const [newOwner, setNewOwner] = useState("");
   const [loaded, setLoaded] = useState(false);
 
   async function load() {

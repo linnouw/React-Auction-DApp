@@ -16,10 +16,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import CheckIcon from "@mui/icons-material/Check";
 import InsertPhotoIcon from "@mui/icons-material/InsertPhoto";
 //web3
-import Web3 from "web3";
 import auction_list_contract from "../../abi/AuctionList.json";
-import { useWeb3React } from "@web3-react/core";
-import { injected } from "../../wallet/Connect";
+import Web3 from "web3/dist/web3.min.js";
 //useContext
 import Web3Context from "../../Web3Context";
 //ipfs
@@ -40,8 +38,28 @@ function AddAuction({ open, closeModal }) {
   const [startingPrice, setStartingPrice] = useState(null);
   const [minIncrement, setMinIncrement] = useState(null);
   const [auctionDuration, setAuctionDuration] = useState(null);
-  const { active, account, library, activate, deactivate } = useWeb3React();
-  const [fileUrl, setFileUrl] = useState();
+  const [fileUrl, setFileUrl] = useState("hello");
+
+  const [haveMetamask, sethaveMetamask] = React.useState(true);
+  const [account, setAccount] = React.useState('');
+  const [active, setActive] = React.useState(false);
+
+  const { ethereum } = window;
+
+  const connect = async () => {
+    try {
+      if (!ethereum) {
+        sethaveMetamask(false);
+      }
+      const accounts = await ethereum.request({
+        method: 'eth_requestAccounts',
+      });
+      setAccount(accounts[0]);
+      setActive(true);
+    } catch (error) {
+      setActive(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,8 +68,8 @@ function AddAuction({ open, closeModal }) {
       description &&
       startingPrice &&
       minIncrement &&
-      auctionDuration &&
-      fileUrl
+      auctionDuration
+      
     ) {
       const web3 = new Web3(new Web3.providers.HttpProvider(projectUrl));
       const networkId = await web3.eth.net.getId();
@@ -90,14 +108,6 @@ function AddAuction({ open, closeModal }) {
       window.location.reload(false);
     } else alert("Error ! all the fields are required to add an auction.");
   };
-
-  async function connect() {
-    try {
-      await activate(injected);
-    } catch (ex) {
-      console.log(ex);
-    }
-  }
 
   const onChange = (e) => {
     const value = parseInt(e.target.value);
@@ -147,13 +157,13 @@ function AddAuction({ open, closeModal }) {
                 variant="outlined"
                 onChange={(e) => setName(e.target.value)}
               />
-              <TextField
+             <TextField
                 id="outlined-basic"
                 label="Description"
                 variant="outlined"
                 onChange={(e) => setDescription(e.target.value)}
               />
-              <input type="file" accept=".png, .jpeg" onChange={captureFile} />
+                <input type="file" accept=".png, .jpeg .pdf" onChange={captureFile} />
             </Stack>
             <Stack
               direction="row"
@@ -177,6 +187,7 @@ function AddAuction({ open, closeModal }) {
               <TextField
                 id="outlined-basic"
                 type="number"
+                label="Duration"
                 value={auctionDuration}
                 variant="outlined"
                 InputProps={{
